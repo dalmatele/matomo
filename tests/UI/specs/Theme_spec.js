@@ -8,10 +8,9 @@
  */
 
 var fs = require('fs');
+var path = require('./path');
 
 describe("Theme", function () {
-    this.retries(2);
-
     this.timeout(0);
 
     function clearAssets() {
