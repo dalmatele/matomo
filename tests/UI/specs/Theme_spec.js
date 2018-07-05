@@ -7,14 +7,28 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 
-var fs = require('fs');
-var path = require('./path');
+var fs = require('fs'),
+    path = require('../../lib/screenshot-testing/support/path');
+
+var removeTree = function(path) {
+    if (fs.existsSync(path)) {
+        fs.readdirSync(path).forEach(function (file, index) {
+            var curPath = path + "/" + file;
+            if (fs.lstatSync(curPath).isDirectory()) { // recurse
+                removeTree(curPath);
+            } else { // delete file
+                fs.unlinkSync(curPath);
+            }
+        });
+        fs.rmdirSync(path);
+    }
+}
 
 describe("Theme", function () {
     this.timeout(0);
 
     function clearAssets() {
-        fs.removeTree(path.join(PIWIK_INCLUDE_PATH, 'tmp', 'assets'));
+        removeTree(path.join(PIWIK_INCLUDE_PATH, 'tmp', 'assets'));
     }
 
     before(function () {
