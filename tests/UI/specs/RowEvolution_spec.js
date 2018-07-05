@@ -18,10 +18,13 @@ describe("RowEvolution", function () {
 
     it('should load when icon clicked in ViewDataTable', async function() {
         await page.goto(viewDataTableUrl);
-        await page.waitForNetworkIdle();
-        await page.evaluate(function() {
-            $('.dataTable tbody tr:first-child a.actionRowEvolution').click();
-        });
+        const row = await page.waitForSelector('tbody tr:first-child');
+        await row.hover();
+
+        const icon = await page.waitForSelector('tbody tr:first-child a.actionRowEvolution');
+        await icon.click();
+
+        await page.waitForSelector('.ui-dialog');
         await page.waitForNetworkIdle();
 
         const dialog = await page.$('.ui-dialog');
@@ -65,7 +68,9 @@ describe("RowEvolution", function () {
 
     it('should display row evolution for an ecommerce item report correctly', async function() {
         await page.goto(ecommerceItemReportWidgetized);
-        await page.click('.dataTable tbody tr:first-child a.actionRowEvolution');
+        await page.evaluate(function() {
+            $('tbody tr:first-child a.actionRowEvolution').click();
+        });
         await page.waitForNetworkIdle();
 
         const dialog = await page.$('.ui-dialog');
